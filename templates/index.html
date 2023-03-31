@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+        <!-- <link rel="stylesheet" href="staticFile/style.css"> -->
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    </head>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<div class="container center">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="white">Custom File Upload</h1>
+      <p class="white">In this example, submit is allowed only in case the user uploads a valid image file.</p>
+    </div>
+  </div>
+  <form name="upload" method="POST" action="{{url_for('run_script')}}" enctype="multipart/form-data" accept-charset="utf-8">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 center">
+        <div class="btn-container">
+          <!--the three icons: default, ok file (img), error file (not an img)-->
+          <h1 class="imgupload"><i class="fa fa-file-image-o"></i></h1>
+          <h1 class="imgupload ok"><i class="fa fa-check"></i></h1>
+          <h1 class="imgupload stop"><i class="fa fa-times"></i></h1>
+          <!--this field changes dinamically displaying the filename we are trying to upload-->
+          <p id="namefile">Only pics allowed! (jpg,jpeg,bmp,png)</p>
+          <!--our custom btn which which stays under the actual one-->
+          <button type="button" id="btnup" class="btn btn-primary btn-lg">Browse for your pic!
+          <!--this is the actual file input, is set with opacity=0 beacause we wanna see our custom one-->
+          <input type="file" value="fileup" name="fileup" id="fileup"></button>
+        </div>
+      </div>
+    </div>
+      <!--additional fields-->
+    <div class="row">     
+      <div class="col-md-12">
+        <!--the defauld disabled btn and the actual one shown only if the three fields are valid-->
+            <input type="submit" value="Submit!" class="btn btn-primary" id="submitbtn">
+            <!-- <input type="button" value="Submit!" class="btn btn-primary" id="submitbtn"> -->
+            <button type="button" class="btn btn-default" disabled="disabled" id="fakebtn" >Submit! <i class="fa fa-minus-circle"></i></button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+    $('#fileup').change(function(){
+//here we take the file extension and set an array of valid extensions
+    var res=$('#fileup').val();
+    var arr = res.split("\\");
+    var filename=arr.slice(-1)[0];
+    filextension=filename.split(".");
+    filext="."+filextension.slice(-1)[0];
+    valid=[".jpg",".png",".jpeg",".bmp"];
+//if file is not valid we show the error icon, the red alert, and hide the submit button
+    if (valid.indexOf(filext.toLowerCase())==-1){
+        $( ".imgupload" ).hide("slow");
+        $( ".imgupload.ok" ).hide("slow");
+        $( ".imgupload.stop" ).show("slow");
+      
+        $('#namefile').css({"color":"red","font-weight":700});
+        $('#namefile').html("File "+filename+" is not  pic!");
+        
+        $( "#submitbtn" ).hide();
+        $( "#fakebtn" ).show();
+    }else{
+        //if file is valid we show the green alert and show the valid submit
+        $( ".imgupload" ).hide("slow");
+        $( ".imgupload.stop" ).hide("slow");
+        $( ".imgupload.ok" ).show("slow");
+      
+        $('#namefile').css({"color":"green","font-weight":700});
+        $('#namefile').html(filename);
+      
+        $( "#submitbtn" ).show();
+        $( "#fakebtn" ).hide();
+    }
+});
+</script>
